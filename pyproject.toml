@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "simplibs-text"
-version = "0.1.0"
+version = "0.2.0"
 description = "Small, safe steps that turn one text into another: remove, keep, replace and decorate parts of it, clean its characters and convert between naming styles — as plain functions and as pipeline actions."
 readme = "README.md"
 license = "MIT"

@@ -1,12 +1,12 @@
 # 🏷️ `annotations` — Types for Your Signatures
 
-The `annotations` package holds the four types the whole library shares — the exact types the
+The `annotations` package holds the five types the whole library shares — the exact types the
 functions and actions declare for their parameters. They live in `simplibs.text.annotations` and are
 also exported from the package root, so **your own functions can accept exactly what this library
 accepts**:
 
 ```python
-from simplibs.text import LineNumber, Pattern, Replacement, UnicodeForm
+from simplibs.text import LineNumber, Pattern, Replacement, Span, UnicodeForm
 ```
 
 Each is a plain annotation object — no class to instantiate — and works with `simplibs-validate`
@@ -32,8 +32,7 @@ when the action is **built**, before any text flows through it.
 | Kind               | Annotations                         | How it decides                                                                |
 |--------------------|-------------------------------------|-------------------------------------------------------------------------------|
 | **Annotated type** | `Pattern`, `LineNumber`             | `Annotated[base, predicate]` — a base type plus a predicate that checks the **value**. |
-| **Type alias**     | `Replacement`                       | A plain `str \| Callable[[re.Match], str]` — only the type is checked; every `str` is fine, even `""`. |
-| **Fixed set**      | `UnicodeForm`                       | A `Literal` — only the listed values exist.                                    |
+| **Type alias**     | `Replacement`, `Span`               | A plain type — only the type is checked, never the value: any `str` is a `Replacement` (even `""`), any pair of integers is a `Span`. || **Fixed set**      | `UnicodeForm`                       | A `Literal` — only the listed values exist.                                    |
 
 An annotated type is written so that editors and type checkers understand it: to the editor it is
 the plain base type (`str | re.Pattern | Regex | RegexPattern`, `int`) and offers the usual hints, while
@@ -47,6 +46,7 @@ set is a `Literal`, so it fails at the signature on a typo (`form="nfc"`) instea
 |---------------|-------------------------------|----------------------------------------------------------------------------------------------------------------|
 | `Pattern`     | `pattern`, `start`, `end`     | `remove_matches`, `remove_lines_matching`, `keep_matches`, `keep_lines_matching`, `keep_between` (`start`, `end`), `replace_matches` — and their actions |
 | `Replacement` | `replacement`                 | `replace_matches` and `ReplaceMatches`                                                                          |
+| `Span`        | `spans`                       | `remove_spans` and `RemoveSpans`                                                                                |
 | `LineNumber`  | `start`, `end`                | `keep_line_range` and `KeepLineRange`                                                                           |
 | `UnicodeForm` | `form`                        | `normalize_unicode` and `NormalizeUnicode`                                                                      |
 
@@ -66,6 +66,7 @@ set is a `Literal`, so it fails at the signature on a typo (`form="nfc"`) instea
 **Type alias**
 
 * [`Replacement`](#replacement)
+* [`Span`](#span)
 
 **Fixed set**
 
@@ -223,6 +224,49 @@ replace_matches("a", "a", lambda m: None)      # raises ParamError (TEXT_CALLBAC
 **Why it is not `Annotated`.** There is nothing to check beyond the type: any `str` is fine,
 including `""` — unlike `Pattern`, where the empty string is a mistake. What the function **returns**
 is checked at the moment it is called, by the library, with a card that says where it happened.
+
+[▲ Back to top](#-table-of-contents)
+
+---
+
+### `Span`
+
+A **range of characters** in a text: a pair `(start, end)`.
+
+**Definition:**
+
+```python
+Span = tuple[int, int]
+```
+
+**Half-open.** `end` is not included, so `text[start:end]` is exactly the range. It is the way
+`re.Match.span()`, `ast` offsets and slices already count, so a value from any of them can be passed on
+without adding or subtracting one.
+
+**Accepts:** `(0, 6)`, `(3, 3)`, `(10, 20)` — any pair of integers.
+
+**Rejects:** a tuple of another length (`(1,)`, `(1, 2, 3)`), a pair that holds something else than
+integers (`("a", 2)`, `(1.5, 2)`), `None`.
+
+**Example usage:**
+
+```python
+from collections.abc import Sequence
+from simplibs.validate import validate_call
+from simplibs.text import Span, remove_spans
+
+remove_spans("hello world", [(0, 6)])          # -> 'world'
+
+@validate_call
+def cut_found(text: str, found: Sequence[Span]) -> str:    # your own function takes the same type
+    return remove_spans(text, found)
+```
+
+**Why it is only a type.** Whether a span fits is known only together with a text:
+`0 <= start <= end <= len(text)`. So `Span` checks the shape (two integers) and nothing more;
+`remove_spans` checks the fit and reports a bad span with a `TEXT_SPAN_INVALID` card.
+
+**Why it is not `Annotated`.** Like `Replacement`: there is nothing to check beyond the type.
 
 [▲ Back to top](#-table-of-contents)
 

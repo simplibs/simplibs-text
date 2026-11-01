@@ -150,7 +150,7 @@ preview(source_text)                                      # lines 10–60, numbe
 
 ```
 src/simplibs/text/
-├── annotations/          ◄── Named types for signatures (Pattern, Replacement, LineNumber, UnicodeForm)
+├── annotations/          ◄── Named types for signatures (Pattern, Replacement, LineNumber, Span, UnicodeForm)
 ├── logic/                ◄── The functional core — plain functions, no Action knowledge
 │   ├── remove/           ◄── remove_spans, remove_matches, remove_lines_matching, remove_empty_lines, ...
 │   ├── keep/             ◄── keep_matches, keep_lines_matching, keep_line_range, keep_between
@@ -328,12 +328,13 @@ The same two recipes as **actions**, built once, for use inside a pipeline.
 ## 🏷️ `annotations/` — Types for your signatures
 
 Named types for the signatures of your own functions and wrappers. `Pattern` and `LineNumber` carry
-a predicate that `@validate_call` checks; `Replacement` and `UnicodeForm` are plain type aliases.
+a predicate that `@validate_call` checks; `Replacement`, `Span`  and `UnicodeForm` are plain type aliases.
 
 | Type          | Description                                                                                              |
 |---------------|----------------------------------------------------------------------------------------------------------|
 | `Pattern`     | What to look for: a literal `str`, a compiled `re.Pattern`, a `Regex` tree or a `RegexPattern`; the empty string is rejected. |
 | `Replacement` | What to put in place of a match: a literal `str`, or a function from the `re.Match` to a `str`.            |
+| `Span`        | A range of characters `(start, end)`, half-open: `text[start:end]` is the range.                           |
 | `LineNumber`  | A line number counted from 1; zero, negatives and `bool` are rejected.                                     |
 | `UnicodeForm` | One of the four Unicode normalization forms: `"NFC"`, `"NFD"`, `"NFKC"`, `"NFKD"`.                        |
 

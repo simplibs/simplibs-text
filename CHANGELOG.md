@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.2.0] - 2026-11-01
+
+### ✨ Added
+
+#### Annotations
+
+* `Span` — a range of characters `(start, end)`, written as `tuple[int, int]`; half-open, so `text[start:end]` is the range. A plain type alias: only the shape is checked, the fit to a text stays with `remove_spans`; exported from `simplibs.text` and `simplibs.text.annotations`
+
+### 📋 Improved
+
+* `remove_spans` takes `Sequence[Span]`; the type of its `spans` is named now, so a parser or a tokenizer can declare the same type in its own signatures. The behaviour is unchanged
+
+---
+
 ## [0.1.0] - 2026-10-29
 
 ### ✨ Added

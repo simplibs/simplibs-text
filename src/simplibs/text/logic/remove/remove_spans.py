@@ -1,5 +1,7 @@
 from collections.abc import Sequence
 from simplibs.validate import validate_call
+# Outers
+from ...annotations import Span
 # Inners
 from ._helpers import cut_spans, normalize_spans
 
@@ -7,7 +9,7 @@ from ._helpers import cut_spans, normalize_spans
 @validate_call
 def remove_spans(
     text: str,
-    spans: Sequence[tuple[int, int]],
+    spans: Sequence[Span],
     *,
     drop_emptied_lines: bool = True,
 ) -> str:

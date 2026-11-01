@@ -1,10 +1,12 @@
 # Outers
+from ....annotations import Span
+# Outers
 from ..._common.helpers import is_blank
 
 
 def cut_spans(
     text: str,
-    spans: list[tuple[int, int]],
+    spans: list[Span],
     drop_emptied_lines: bool,
 ) -> str:
     """Remove normalized spans from a text.

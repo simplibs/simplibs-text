@@ -48,6 +48,7 @@ from .annotations import (
     LineNumber,
     Pattern,
     Replacement,
+    Span,
     UnicodeForm,
 )
 
@@ -95,6 +96,7 @@ __all__ = [
     "LineNumber",
     "Pattern",
     "Replacement",
+    "Span",
     "UnicodeForm",
 ]
 
@@ -124,11 +126,11 @@ Every function of the `logic/` sub-packages and the public annotations:
 * **Internals** — `_common/`, `_helpers/`, `_validations/` and `_conversion/`.
 
 ## Why the Annotations ARE Exported
-`Pattern`, `Replacement`, `LineNumber` and `UnicodeForm` are meant for the
-caller's own signatures, always used with the functions.
+`Pattern`, `Replacement`, `LineNumber`, `Span` and `UnicodeForm` are meant for
+the caller's own signatures, always used with the functions.
 
 ## Text Is Literal by Default
-A `str` pattern and a `str` replacement mean exactly themselves. Regex enters 
+A `str` pattern and a `str` replacement mean exactly themselves. Regex enters
 through `re.compile(...)`, a `Regex` tree or a `RegexPattern` from `simplibs-regex`.
 
 ## `__all__`
@@ -174,5 +176,6 @@ sub-packages below export by plain imports.
 | `LineNumber`              | Annotated Type | A line number counted from 1. |
 | `Pattern`                 | Annotated Type | A literal `str`, a `re.Pattern`, a `Regex` tree or a `RegexPattern` to search for. |
 | `Replacement`             | Type Alias     | A literal `str`, or a function from a `re.Match` to a `str`. |
+| `Span`                    | Type Alias     | A range of characters `(start, end)`, half-open. |
 | `UnicodeForm`             | Literal        | One of the four Unicode normalization forms. |
 """

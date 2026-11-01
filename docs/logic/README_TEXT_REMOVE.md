@@ -91,7 +91,7 @@ to remove in its own way (a regex, a parser, a tokenizer).
 **Parameters:**
 
 * `text` (*str*): The text.
-* `spans` (*Sequence[tuple[int, int]]*): `(start, end)` pairs, **half-open** — `text[start:end]` is
+* `spans` (*Sequence[Span]*): [`Span`](../README_TEXT_ANNOTATIONS.md#span) pairs `(start, end)`, **half-open** — `text[start:end]` is
   removed, exactly as `re.Match.span()`, `ast` offsets and slices work, so values can be passed
   straight through. Any order; overlapping and touching spans are merged; empty spans
   (`start == end`) are ignored.
@@ -128,7 +128,7 @@ remove_spans(source, [(start, end)])                       # -> 'def f():\n    r
 
 ```python
 @validate_call
-def remove_spans(text: str, spans: Sequence[tuple[int, int]], *, drop_emptied_lines: bool = True) -> str:
+def remove_spans(text: str, spans: Sequence[Span], *, drop_emptied_lines: bool = True) -> str:
     merged = normalize_spans(spans, len(text))        # check, drop empty ones, sort, merge
     if not merged:
         return text                                   # nothing to remove — the very same text back

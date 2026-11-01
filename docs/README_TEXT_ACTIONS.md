@@ -123,7 +123,7 @@ Wraps [`remove_spans`](logic/README_TEXT_REMOVE.md#remove_spans) — cuts given 
 
 **Constructor options:**
 
-* `spans` (*Sequence[tuple[int, int]]*, required): `(start, end)` pairs, half-open, any order; overlapping spans are merged.
+* `spans` (*Sequence[Span]*, required): [`Span`](README_TEXT_ANNOTATIONS.md#span) pairs `(start, end)`, half-open, any order; overlapping spans are merged.
 * `drop_emptied_lines` (*bool*, default `True`): A line that is blank only because of the removal disappears whole.
 
 **Main input:** the text (`str`). **Returns:** `str`.

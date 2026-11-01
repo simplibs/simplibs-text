@@ -1,12 +1,14 @@
 from collections.abc import Sequence
+# Outers
+from ....annotations import Span
 # Inners
 from .._validations import raise_invalid_span_error
 
 
 def normalize_spans(
-    spans: Sequence[tuple[int, int]],
+    spans: Sequence[Span],
     text_length: int,
-) -> list[tuple[int, int]]:
+) -> list[Span]:
     """Check spans against the text length and turn them into sorted, separate ranges.
 
     Args:
@@ -21,7 +23,7 @@ def normalize_spans(
     """
 
     # 1. Check every span and drop the empty ones (nothing to remove, nothing emptied)
-    valid: list[tuple[int, int]] = []
+    valid: list[Span] = []
     for index, span in enumerate(spans):
         start, end = span
         if not 0 <= start <= end <= text_length:
@@ -30,7 +32,7 @@ def normalize_spans(
             valid.append((start, end))
 
     # 2. Sort, then merge spans that overlap or touch
-    merged: list[tuple[int, int]] = []
+    merged: list[Span] = []
     for start, end in sorted(valid):
         if merged and start <= merged[-1][1]:
             merged[-1] = (merged[-1][0], max(merged[-1][1], end))

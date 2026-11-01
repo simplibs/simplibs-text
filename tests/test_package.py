@@ -2,7 +2,7 @@ import simplibs.text as text_package
 import simplibs.text.actions as actions_package
 import simplibs.text.presets as presets_package
 
-ANNOTATIONS = {"LineNumber", "Pattern", "Replacement", "UnicodeForm"}
+ANNOTATIONS = {"LineNumber", "Pattern", "Replacement", "Span", "UnicodeForm"}
 RECIPES = {"cleanup_whitespace", "compact"}
 FUNCTIONS = {
     "add_line_numbers", "dedent", "indent", "keep_ascii", "keep_between", "keep_line_range",
